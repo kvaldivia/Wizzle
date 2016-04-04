@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html ng-app="wizzle" ng-csp> 
+    <head>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="index.css">
+        <link rel="stylesheet" href="lib/onsenui/css/onsenui.css">
+        <link rel="stylesheet" href="lib/onsenui/css/onsen-css-components.css">
+        <script type="text/javascript" src="lib/angular/angular.js"></script>
+        <script type="text/javascript" src="lib/onsenui/js/onsenui.js"></script>
+        <script type="text/javascript" src="app.js"></script>
+        <title>{{wizzle.details.name}}</title>
+    </head>
+    <body ng-controller="CoursesList">
+      <script type="text/javascript" src="cordova.js"></script>
+      <script type="text/javascript" src="index.js"></script>
+
+      <ons-sliding-menu var="menu" main-page="my_courses.html" menu-page="menu.html" max-slide-distance="260px" type="push">
+      </ons-sliding-menu>
+
+
+      <ons-template id="my_courses.html">
+        <ons-page>
+          <ons-toolbar>
+            <div class="left">
+              <ons-toolbar-button ng-click="menu.toggle()">
+                <ons-icon icon="ion-navicon" size="28px" fixed-width="false"></ons-icon>
+              </ons-toolbar-button>
+            </div>
+            <div class="center">{{myCourses}}</div>
+          </ons-toolbar>
+          <ons-row style="margin-top: 100px; text-align: center;">
+            <ons-col>
+              <ons-button ng-click="menu.toggleMenu()">
+                Toggle Menu
+              </ons-button>
+              <p style="color: #999; font-size: 13px;">
+              Click "Toggle Menu" to open/close menu,<br> You can also swipe the page right/left.
+              </p>
+            </ons-col>
+          </ons-row>
+        </ons-page>
+      </ons-template>
+
+
+      <ons-template id="menu.html">
+        <ons-page modifier="menu-page">
+          <ons-toolbar modifier="transparent">
+            <div class="right">
+              <ons-toolbar-button class="menu-closeMenu" ng-click="menu.closeMenu()">
+                  </ons-icon>Close
+              </ons-toolbar-button>
+            </div>
+          </ons-toolbar>
+          <ons-list class="menu-list">
+            <ons-list-item class="menu-item" ng-click="menu.closeMenu()">
+              <ons-icon icon="fa-plus"></ons-icon>
+              MyCourses() 
+            </ons-list-item>
+            <ons-list-item class="menu-item" ng-click="menu.closeMenu()">
+              <ons-icon icon="fa-bookmark"></ons-icon>
+              MySchedule()
+            </ons-list-item>
+            <ons-list-item class="menu-item" ng-click="menu.closeMenu()">
+              <ons-icon icon="fa-twitter"></ons-icon>
+              Official Twitter
+            </ons-list-item>
+          </ons-list>
+          
+          <br>
+
+          <ons-list class="bottom-menu-list">
+            <ons-list-item class="bottom-menu-item" ng-click="menu.closeMenu()">
+            Settings
+              <div class="notification menu-notification">3</div>
+            </ons-list-item>
+
+            <ons-list-item class="bottom-menu-item" ng-click="menu.closeMenu()">
+            Help
+            </ons-list-item>  
+            
+            <ons-list-item class="bottom-menu-item" ng-click="menu.closeMenu()">
+            Send feedback
+            </ons-list-item>
+          </ons-list>
+
+        </ons-page>
+      </ons-template>
+
+          <ons-template id="course_details.html">
+            <ons-page>
+              <ons-toolbar>
+                <div class="left">
+                  <ons-toolbar-button ng-click="menu.toggle()">
+                    <ons-icon icon="ion-favicon" size="28px" fixed-width="false"></ons-icon>
+                  </ons-toolbar-button>
+                </div>
+                <div class="center">{{CourseName}}</div>
+              </ons-toolbar>
+            </ons-page>
+          </ons-template>
+
+          <ons-template id="event_details.html">
+            <ons-page>
+              <ons-toolbar>
+                <div class="left">
+                  <ons-toolbar-button ng-click="menu.toggle()">
+                    <ons-icon icon="ion-favicon" size="28px" fixed-width="false"></ons-icon>
+                  </ons-toolbar-button>
+                </div>
+                <div class="center">{{EventTitle}}</div>
+              </ons-toolbar>
+            </ons-page>
+          </ons-template>
+
+    </body>
+</html>
