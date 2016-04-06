@@ -9,3 +9,9 @@ plugins/
 www/lib/
 *.swp
 *.log
+*.keystore
+.calabash_settings
+bin/
+screenshot*
+Gemfile.lock
+test_servers/

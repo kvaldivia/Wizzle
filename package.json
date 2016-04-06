@@ -29,7 +29,7 @@
     "shelljs": "0.2.6"
   },
   "scripts": {
-    "postinstall": "bower install",
+    "postinstall": "bower install && bundle install --path=bin",
 
     "prestart": "npm install",
     "start": "http-server -a localhost -p 8000 -c-1",
@@ -44,5 +44,7 @@
     "preprotractor": "npm run update-webdriver",
     "protractor": "protractor tests/e2e/protractor.conf.js",
     "bower-install": "bower install"
+
+          
   }
 }
