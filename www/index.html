@@ -10,12 +10,18 @@
         <link rel="stylesheet" href="lib/monaca-onsenui/css/onsen-css-components.css">
         <script type="text/javascript" src="lib/angular/angular.js"></script>
         <script type="text/javascript" src="lib/monaca-onsenui/js/onsenui.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="index.js"></script>
         <script type="text/javascript" src="app.js"></script>
+        <script type="text/javascript" src="components/utils/utils-services.js"></script>
+        <script type="text/javascript" src="components/core/core-services.js"></script>
+        <script type="text/javascript" src="components/scraper/scraper.js"></script>
+        <script type="text/javascript" src="components/courses-list/courses-list-controller.js"></script>
+        <script type="text/javascript" src="components/main-menu/main-menu-controller.js"></script>
+
         <title>{{wizzle.details.name}}</title>
     </head>
-    <body ng-controller="CoursesList">
-      <script type="text/javascript" src="cordova.js"></script>
-      <script type="text/javascript" src="index.js"></script>
+    <body ng-controller="MainController">
 
       <ons-sliding-menu var="menu" main-page="my_courses.html" menu-page="menu.html" max-slide-distance="260px" type="push">
       </ons-sliding-menu>
@@ -29,16 +35,16 @@
                 <ons-icon icon="ion-navicon" size="28px" fixed-width="false"></ons-icon>
               </ons-toolbar-button>
             </div>
-            <div class="center">{{myCourses}}</div>
+            <div class="center">myCourses</div>
           </ons-toolbar>
-          <ons-row style="margin-top: 100px; text-align: center;">
+          <ons-row style="margin-top: 1px; margin-left: 20px; margin-right:20px; text-align: center;">
             <ons-col>
-              <ons-button ng-click="menu.toggleMenu()">
-                Toggle Menu
-              </ons-button>
-              <p style="color: #999; font-size: 13px;">
-              Click "Toggle Menu" to open/close menu,<br> You can also swipe the page right/left.
-              </p>
+              <ons-list ng-controller="CoursesListController">
+                <ons-list-item ng-repeat="course in data.courses">
+                  <span>{{course.name}}</span>
+                  <ons-icon icon="fa-certificate" size="20px">
+                </ons-list-item>
+              </ons-list>
             </ons-col>
           </ons-row>
         </ons-page>
@@ -50,22 +56,14 @@
           <ons-toolbar modifier="transparent">
             <div class="right">
               <ons-toolbar-button class="menu-closeMenu" ng-click="menu.closeMenu()">
-                  </ons-icon>Close
+                </ons-icon>Close
               </ons-toolbar-button>
             </div>
           </ons-toolbar>
-          <ons-list class="menu-list">
-            <ons-list-item class="menu-item" ng-click="menu.closeMenu()">
+          <ons-list class="menu-list" ng-controller="MainMenuController">
+            <ons-list-item class="menu-item" ng-click="menu.closeMenu()" ng-repeat="option in data.options">
               <ons-icon icon="fa-plus"></ons-icon>
               MyCourses() 
-            </ons-list-item>
-            <ons-list-item class="menu-item" ng-click="menu.closeMenu()">
-              <ons-icon icon="fa-bookmark"></ons-icon>
-              MySchedule()
-            </ons-list-item>
-            <ons-list-item class="menu-item" ng-click="menu.closeMenu()">
-              <ons-icon icon="fa-twitter"></ons-icon>
-              Official Twitter
             </ons-list-item>
           </ons-list>
           
