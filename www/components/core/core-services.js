@@ -64,23 +64,23 @@
     var CoreObject = {
 
       getName : function () {
-        return this.getName();
+        return this._getName();
       },
 
       getUrl : function () {
-        return this.getUrl();
+        return this._getUrl();
       },
 
       getDateScraped : function () {
-        return this.getDate();
+        return this._getDate();
       },
 
       setData : function (dataobj) {
-        this.setData(dataobj);
+        this._setData(dataobj);
       },
 
       getSpec : function () {
-        return this.getSpec();
+        return this._getSpec();
       }
 
     };
@@ -90,33 +90,26 @@
 
       var Classroom = function (urlString) {
         var _spec = classRoomSpec;
-        var _coursesList = {};
+        var _coursesList = [];
         var _data = {};
         var _url = urlString || "";
 
-        this._spec = function () {return _spec; };
+        this._getSpec = function () {return _spec; };
+        this._getUrl = function () {return _url; };
+        this._getName = function () {return _data.name;};
+        this._setData = function (dataobj) {_data = specFill(_spec, dataob); };
+
+        this._getAllCourses = function () { return deepCopy(_coursesList); };
+        this._getCoursesById = function () { 
+          var result = {};
+          
+
+        };
+
       };
 
       Classroom.prototype = Object.create(CoreObject);
       
-      Classroom.prototype.getName = function () { 
-        return _data.name; 
-      };
-
-      Classroom.prototype.getUrl = function () { 
-        return _url; 
-      };
-
-      Classroom.prototype.getDateScraped = function () {
-        return _data.dateScraped;
-      };
-
-      Classroom.prototype.setData = function (dataObj) {
-        _data = specFill(_spec, dataObj);
-      };
-
-
-
       Classroom.prototype.getAllCourses = function () { 
         return deepCopy(coursesList);
       };
@@ -143,33 +136,20 @@
         var _data = {};
         var _url = urlString || "";
         var _courseEvents = [];
+        
+        this._getSpec = function () {return _spec; };
+        this._getUrl = function () {return _url; };
+        this._getName = function () {return _data.name;};
+        this._setData = function (dataobj) {_data = specFill(_spec, dataob);};
+
+        this._getTeacherName = function () {return _data.teacherName;};
+        this._getAllEvents = function () {return deepCopy(_courseEvents);};
       };
 
       Course.prototype = Object.create(CoreObject);
       
-      Course.prototype.getName = function () {
-        return CoreObject.prototype.getName.call(this);
-      };
-
-      Course.prototype.getUrl = function () {
-        return CoreObject.prototype.getUrl.call(this);
-      };
-
-      Course.prototype.getDateScraped = function () {
-        return CoreObject.prototype.getDateScraped.call(this);
-      };
-
-      Course.prototype.getSpec = function () {
-        return CoreObject.prototype.getSpec.call(this);
-      };
-
-      Course.prototype.setData = function (dataObj) {
-        return CoreObject.prototype.setData.call(this, dataObj);
-      };
-
-
       Course.prototype.getTeacherName = function () {
-        return data.teacherName;
+        return _data.teacherName;
       };
 
       Course.prototype.getAllEvents = function () {
@@ -196,29 +176,14 @@
         var _url = urlString || "";
         var _message = "";
         var _resources = {};
+
+        this._getSpec = function () {return _spec; };
+        this._getUrl = function () {return _url; };
+        this._getName = function () {return _data.name;};
+        this._setData = function (dataobj) {_data = specFill(_spec, dataob);};
       };
 
       CourseEvent.prototype = Object.create(CoreObject);
-
-      CourseEvent.prototype.getName = function () {
-        return CoreObject.prototype.getName.call(this);
-      };
-
-      CourseEvent.prototype.getUrl = function () {
-        return CoreObject.prototype.getUrl.call(this);
-      };
-
-      CourseEvent.prototype.getDateScraped = function () {
-        return CoreObject.prototype.getDateScraped.call(this);
-      };
-
-      CourseEvent.prototype.getSpec = function () {
-        return CoreObject.prototype.getSpec.call(this);
-      };
-
-      CourseEvent.prototype.setData = function (dataObj) {
-        return CoreObject.prototype.setData.call(this, dataObj);
-      };
 
       return CourseEvent;
     })();

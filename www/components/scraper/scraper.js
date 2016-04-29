@@ -20,9 +20,10 @@
       };
 
       function parse(response) {
-        // TODO: parse logic, this function will use the _spec to determine which
-        // values should be scraped out of the webpage and will return an object
-        // containing the data to the _object attached to the scraper.
+        // TODO: parse logic, this function will use the _spec to determine 
+        // which values should be scraped out of the webpage and will return
+        // an object containing the data to the _object attached to the 
+        // scraper.
       }
 
       /* run()
