@@ -1,27 +1,50 @@
-describe('Scraper.WebPage', function() {
-  beforeEach(module('wizzle'));
+/* global describe it beforeEach inject expect */
+describe('Scraper Factory', function() {
+  var coreFactory;
+  var scraperFactory;
+  this.coreObject = undefined;
+  this.classroomScraper = undefined;
+  this.courseScraper = undefined;
+  this.courseEventScraper = undefined;
 
-  it('should download html file from web page', inject(function($controller) {
-    var scope = {},
-        ctrl = $controller('FetchWebPage', {$scope:scope});
+  beforeEach(module('wizzle.core'));
+  beforeEach(module('wizzle.scraper'));
+  beforeEach(module('wizzle.utils'));
 
-    expect(scope.header.code).toBe(200);
+  beforeEach(inject(function(_coreFactory_, _scraperFactory_) {
+    coreFactory = _coreFactory_;
+    scraperFactory = _scraperFactory_;
   }));
 
-  it('should be able to sent post requests to the targeted website', inject(function($controller){
-    //TODO: write actual test
-  }));
+  describe('ClassroomScraper creation', function() {
+    it('Creates a classroom scraper and loads the _data member with the ' +
+       'given parameter', function() {
+      this.coreObj = coreFactory.createClassroom();
+      this.classroomScraper = scraperFactory.createClassroomScraper(
+        this.coreObj);
+      expect(this.classroomScraper).toBeDefined();
+      // expect(this.classroomScraper.getData()).toBe(obj);
+    });
+  });
 
-  it('should save the html file in local storage', inject(function($controller){
-    //TODO: write actual test
-  }));
+  describe('CourseScraper creation', function() {
+    it('Creates a CourseScraper and loads the _data member with the ' +
+       'given parameter', function() {
+      this.coreObj = coreFactory.createCourse();
+      this.courseScraper = scraperFactory.createCourseScraper(this.coreObj);
+      expect(this.courseScraper).toBeDefined();
+      // expect(this.clasroomScraper.getData()).toBe(obj);
+    });
+  });
 
-  it('should strip the web page and build a WebPage object', inject(function($controller){
-    //TODO: write actual test
-  }));
-
-  it('should "attach" the WebPage object to the WebPageTracker object', inject(function($controller){
-    //TODO: write actual test
-  }));
-
+  describe('CourseEventScraper creation', function() {
+    it('Creates a CourseEventScraper and loads the _data member with the ' +
+       'given parameter', function() {
+      this.coreObj = coreFactory.createCourseEvent();
+      this.courseEventScraper = scraperFactory.createCourseEventScraper(
+        this.coreObj);
+      expect(this.courseEventScraper).toBeDefined();
+      // expect(this.courseScraper.getData()).toBe(obj);
+    });
+  });
 });

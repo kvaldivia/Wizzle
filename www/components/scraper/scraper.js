@@ -1,55 +1,148 @@
-(function () {
-  angular.module('wizzle.scraper', [])
-  .factory('scraperFactory', ['$http', scraperFactory]);
+/* global angular */
+(function() {
+  angular.module('wizzle.scraper', ['wizzle.core', 'wizzle.utils'])
+  .factory('scraperFactory', ['$http', 'utilities', scraperFactory]);
 
-  function scraperFactory ($http){
-    var service = {
-      createScraper : createScraper
+  /**
+   * @module scraper
+   * */
+  /**
+   * Defines the interface for the scraperFactory.
+   * @param {AngularService} $http The $http service from angularjs.
+   * @param {Function} utilities A utilities service from wizzle.utils.
+   * @return {Object} The object that allows the creation of new Scrapers.
+   * */
+  function scraperFactory($http, utilities) {
+    var Scraper;
+    var ClassroomScraper;
+    var CourseScraper;
+    var CourseEventScraper;
+    var factory = {
+      createClassroomScraper: createClassroomScraper,
+      createCourseScraper: createCourseScraper,
+      createCourseEventScraper: createCourseEventScraper
     };
 
-    function createScraper (url, object) {
-      return new Scraper(url, object);
-    }
-
-    var Scraper = (function () {
-      var Scraper = function (url, object) {
-        var _url = url;
-        var _object = object;
-        var _spec = object.getSpec();
-        var _auth;
-      };
-
-      function parse(response) {
-        // TODO: parse logic, this function will use the _spec to determine 
-        // which values should be scraped out of the webpage and will return
-        // an object containing the data to the _object attached to the 
-        // scraper.
+    Scraper = (function() {
+      /**
+      * This is the Scraper constructor function, every scraper in wizzle
+      * @constructor
+      * @param {CoreObject} object The CoreObject which will be filled by the
+      * scraper.
+      */
+      function Scraper(object) {
+        this._data = object;
+        this._url = object.getUrl();
+        this._spec = object.getSpec();
+        this._auth = {};
+        this._history = {};
       }
 
-      /* run()
-       * this method is responsible for fetching a webpage from a webserver.
-       * Upon success, it wil send the data to the parse private function.
-       */
-      Scraper.prototype.run = function(){
-        $http({method: 'GET', url: 'http://www.ucsm.edu.pe'})
+      /**
+       * Parses the htmlString and fills an spec compliant object.
+       * @param {String} htmlString The string containing a web page html.
+       * @param {Object} spec The spec object containing the data to be scraped
+       * from the html string.
+       * @return {Object} The object containing relevant data.
+       * */
+      Scraper.prototype.parse = function(htmlString, spec) {
+        return htmlString + spec;
+      };
+
+      Scraper.prototype.run = function() {
+        $http({method: 'GET', url: this._url})
         .then(function successCallback(response) {
-          _object.setData(parse(response, _spec));
+          this._object.setData(this.parse(response, this._spec));
         }, function errorCallback(response) {
           console.log("Couldn't fetch web page " + response.status);
         });
       };
 
       Scraper.prototype.setFrequency = function(freq) {
-        frequency = freq;
+        this._frequency = freq;
       };
 
       Scraper.prototype.getFrequency = function() {
-        return frequency;
+        return this._frequency;
       };
 
       return Scraper;
     })();
 
-    return service;
-  } 
+    ClassroomScraper = (function(superClass) {
+      utilities.extend(ClassroomScraper, superClass);
+
+      function ClassroomScraper(...args) {
+        var tmp = ClassroomScraper.uber.constructor.apply(this, args);
+        return tmp;
+      }
+
+      ClassroomScraper.prototype.parse = function() {
+        // do the parsing.
+      };
+
+      return ClassroomScraper;
+    })(Scraper);
+
+    CourseScraper = (function(superClass) {
+      utilities.extend(CourseScraper, superClass);
+
+      function CourseScraper(...args) {
+        var tmp = CourseScraper.uber.constructor.apply(this, args);
+        return tmp;
+      }
+
+      CourseScraper.prototype.parse = function() {
+        // do the parsing.
+      };
+
+      return CourseScraper;
+    })(Scraper);
+
+    CourseEventScraper = (function(superClass) {
+      utilities.extend(CourseEventScraper, superClass);
+
+      function CourseEventScraper(...args) {
+        var tmp = CourseEventScraper.uber.constructor.apply(this, args);
+        return tmp;
+      }
+
+      CourseEventScraper.prototype.parse = function() {
+        // do the parsing.
+      };
+
+      return CourseEventScraper;
+    })(Scraper);
+
+    /**
+     * Creates and returns a new instance of Scraper
+     * @param {Classroom} object The Classroom object that will be binded to the
+     * scraper object.
+     * @return {ClassroomScraper} The reference to the scraper object.
+     * */
+    function createClassroomScraper(object) {
+      return new ClassroomScraper(object);
+    }
+
+    /**
+     * Creates and returns a new instance of Scraper
+     * @param {Course} object The Course object that will be binded to the
+     * scraper object.
+     * @return {CourseScraper} The reference to the scraper object.
+     * */
+    function createCourseScraper(object) {
+      return new CourseScraper(object);
+    }
+
+    /**
+     * Creates and returns a new instance of Scraper
+     * @param {CourseEvent} object The CourseEvent object that will be binded
+     * to the scraper object.
+     * @return {CourseEventScraper} The reference to the scraper object.
+     * */
+    function createCourseEventScraper(object) {
+      return new CourseEventScraper(object);
+    }
+    return factory;
+  }
 })();

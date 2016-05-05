@@ -1,197 +1,178 @@
-(function () {
+/* global angular */
+(function() {
   angular
   .module('wizzle.core', ['wizzle.utils'])
-  .service('coreObjectSpec', [coreObjectSpec])
-  .service('classRoomSpec', ['coreObjectSpec', classRoomSpec])
-  .service('courseSpec', ['coreObjectSpec', courseSpec])
-  .service('courseEventSpec', ['coreObjectSpec', courseEventSpec])
+  .factory('specFactory', [SpecFactory])
   .service('specFill', [specFill])
-  .service('CoreFactory', ['deepCopy', 'specFill', 'classRoomSpec', 'courseEventSpec', 
-           'courseSpec', 'coreObjectSpec', CoreFactory]);
+  .factory('coreFactory', ['utilities', 'specFill', 'specFactory',
+           coreFactory]);
 
-  function coreObjectSpec () {
-    return {
-      "id": "",
-      "url": "",
-      "name": "",
-      "dateScraped": ""
+  function SpecFactory() {
+    var factory = {
+      classroomSpec: classroomSpec,
+      courseSpec: courseSpec,
+      courseEventSpec: courseEventSpec
     };
+
+    function coreObjectSpec() {
+      return {
+        id: "",
+        url: "",
+        name: "",
+        dateScraped: ""
+      };
+    }
+
+    function classroomSpec() {
+      var spec = Object.create(coreObjectSpec());
+      spec.organization = "";
+      spec.platform = "";
+      return spec;
+    }
+
+    function courseSpec() {
+      var spec = Object.create(coreObjectSpec());
+      spec.teacherName = "";
+      return spec;
+    }
+
+    function courseEventSpec() {
+      var spec = Object.create(coreObjectSpec());
+      spec.datePublished = "";
+      spec.publisher = "";
+      spec.message = "";
+      spec.eventTitle = "";
+      spec.resources = "";
+      return spec;
+    }
+    return factory;
   }
 
-  function classRoomSpec (coreObjectSpec) {
-    var spec = Object.create(coreObjectSpec);
-    spec.organization = "";
-    spec.platform = "";
-    return spec;
-  }
-
-  function courseSpec (coreObjectSpec) {
-    var spec = Object.create(coreObjectSpec);
-    spec.teacherName = "";
-    return spec;
-  }
-
-  function courseEventSpec (coreObjectSpec) {
-    var spec = Object.create(coreObjectSpec);
-    spec.datePublished = "";
-    spec.publisher = "";
-    spec.message = ""; 
-    spec.eventTitle = "";
-    spec.resources = "";
-    return spec;
-  }
-
-  function CoreFactory (deepCopy, specFill, classRoomSpec, courseEventSpec, courseSpec) {
-
-    var service = {
+  function coreFactory(utilities, specFill, specFactory) {
+    var factory = {
       createClassroom: createClassroom,
       createCourse: createCourse,
       createCourseEvent: createCourseEvent
     };
 
-    function createClassroom () {
-      return new Classroom();
-    }
-
-    function createCourse () {
-      return new Course();
-    }
-
-    function createCourseEvent() {
-      return new CourseEvent();
-    }
-
     var CoreObject = {
 
-      getName : function () {
-        return this._getName();
+      getName: function() {
+        return this._data.name;
       },
 
-      getUrl : function () {
-        return this._getUrl();
+      getUrl: function() {
+        return this._url;
       },
 
-      getDateScraped : function () {
-        return this._getDate();
+      getDateScraped: function() {
+        return this._data.dateScraped;
       },
 
-      setData : function (dataobj) {
-        this._setData(dataobj);
+      setData: function(dataobj) {
+        this.setData(dataobj);
       },
 
-      getSpec : function () {
-        return this._getSpec();
+      getSpec: function() {
+        return this._spec;
       }
-
     };
 
-
-    var Classroom = (function () {
-
-      var Classroom = function (urlString) {
-        var _spec = classRoomSpec;
-        var _coursesList = [];
-        var _data = {};
-        var _url = urlString || "";
-
-        this._getSpec = function () {return _spec; };
-        this._getUrl = function () {return _url; };
-        this._getName = function () {return _data.name;};
-        this._setData = function (dataobj) {_data = specFill(_spec, dataob); };
-
-        this._getAllCourses = function () { return deepCopy(_coursesList); };
-        this._getCoursesById = function () { 
-          var result = {};
-          
-
-        };
-
+    var Classroom = (function() {
+      var Classroom = function(urlString) {
+        this._spec = specFactory.classroomSpec();
+        this._coursesList = [];
+        this._data = {};
+        this._url = urlString || "";
       };
 
       Classroom.prototype = Object.create(CoreObject);
-      
-      Classroom.prototype.getAllCourses = function () { 
-        return deepCopy(coursesList);
+      Classroom.prototype.constructor = Classroom;
+
+      Classroom.prototype.getAllCourses = function() {
+        return utilities.deepCopy(this.coursesList);
       };
 
-      Classroom.prototype.getCourseById = function (id) {
-        return this;
+      Classroom.prototype.getCourseById = function(id) {
+        return id;
       };
 
-      Classroom.prototype.pushCourse = function (obj) {
-        for (var prop in data) {
-          data[prop] = obj[prop];
+      Classroom.prototype.pushCourse = function(obj) {
+        for (var prop in this.data) {
+          this.data[prop] = obj[prop];
         }
       };
-
       return Classroom;
-
     })();
 
-    
-    var Course = (function () {
-      
-      var Course = function (url) {
-        var _spec = courseSpec;
-        var _data = {};
-        var _url = urlString || "";
-        var _courseEvents = [];
-        
-        this._getSpec = function () {return _spec; };
-        this._getUrl = function () {return _url; };
-        this._getName = function () {return _data.name;};
-        this._setData = function (dataobj) {_data = specFill(_spec, dataob);};
-
-        this._getTeacherName = function () {return _data.teacherName;};
-        this._getAllEvents = function () {return deepCopy(_courseEvents);};
+    var Course = (function() {
+      var Course = function(urlString) {
+        this._spec = specFactory.courseSpec();
+        this._data = {};
+        this._url = urlString || "";
+        this._courseEvents = [];
       };
 
       Course.prototype = Object.create(CoreObject);
-      
-      Course.prototype.getTeacherName = function () {
-        return _data.teacherName;
+      Course.prototype.constructor = Course;
+
+      Course.prototype.getTeacherName = function() {
+        return this._data.teacherName;
       };
 
-      Course.prototype.getAllEvents = function () {
-        var tmp = deepCopy(courseEvents);
+      Course.prototype.getAllEvents = function() {
+        var tmp = utilities.deepCopy(this._courseEvents);
         return tmp;
       };
 
-      Course.prototype.getEventById = function (id) {
-        return deepCopy(courseEvents[id]);
+      Course.prototype.getEventById = function(eventId) {
+        return utilities.deepCopy(this._courseEvents[eventId]);
       };
 
-      Course.prototype.pushEvent = function (eventObj) {
-        courseEvents.push(eventObj);
+      Course.prototype.pushEvent = function(eventObj) {
+        this._courseEvents.push(eventObj);
       };
-
       return Course;
-
     })();
 
-    var CourseEvent = (function () {
-      var CourseEvent = function (urlString) {
-        var _spec = courseEventSpec;
-        var _data = {};
-        var _url = urlString || "";
-        var _message = "";
-        var _resources = {};
-
-        this._getSpec = function () {return _spec; };
-        this._getUrl = function () {return _url; };
-        this._getName = function () {return _data.name;};
-        this._setData = function (dataobj) {_data = specFill(_spec, dataob);};
+    var CourseEvent = (function() {
+      var CourseEvent = function(urlString) {
+        this._spec = specFactory.courseEventSpec();
+        this._data = {};
+        this._url = urlString || "";
+        this._message = "";
+        this._resources = {};
       };
 
       CourseEvent.prototype = Object.create(CoreObject);
+      CourseEvent.prototype.constructor = CourseEvent;
+
+      CourseEvent.prototype.getMessage = function() {
+        return this._message;
+      };
+
+      CourseEvent.prototype.setMessage = function(msg) {
+        this._message = msg;
+      };
 
       return CourseEvent;
     })();
 
-    return service;
+    function createClassroom(urlString) {
+      return new Classroom(urlString);
+    }
+
+    function createCourse(urlString) {
+      return new Course(urlString);
+    }
+
+    function createCourseEvent(urlString) {
+      return new CourseEvent(urlString);
+    }
+    return factory;
   }
 
-  function specFill (spec, obj) {
+  function specFill(spec, obj) {
     var tmp = {};
     for (var prop in spec) {
       tmp[prop] = obj[prop];

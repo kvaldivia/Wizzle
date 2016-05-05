@@ -1,41 +1,36 @@
-(function () {
+/* global angular */
+(function() {
   angular
   .module('wizzle.utils', [])
-  .service('inheritPrototype', [inheritPrototype])
-  .service('shallowInherit', [shallowInherit])
-  .service('deepCopy', [deepCopy]);
+  .service('utilities', [utilities]);
 
-  function inheritPrototype (parentConstructor) {
-    var childConstructor = function () {};
-    var F = function () {};
-    F.prototype = parentConstructor.prototype;
-    childConstructor.prototype = new F();
-    childConstructor.prototype.constructor = childConstructor;
-    childConstructor.uber = parentConstructor.prototype;
-  } 
+  function utilities() {
+    this.inheritPrototype = function(constructor, prototypeObject) {
+      constructor.prototype = Object.create(prototypeObject);
+      constructor.prototype.constructor = constructor;
+    };
 
-  function shallowInherit (parentObj) {
-    var childObj = {};
-    for (var property in parentObj) {
-      childObj[property] = parentObj[property];
-    }
-    childObj.uber = parentObject;
-    return childObj;
-  } 
+    this.extend = function(Child, Parent) {
+      var F = function() {};
+      F.prototype = Parent.prototype;
+      Child.prototype = new F();
+      Child.prototype.constructor = Child;
+      Child.uber = Parent.prototype;
+    };
 
-  function deepCopy (parentObj) {
-    var childObj = {};
-    for (var property in parentObj) {
-      if (parentObj.hasOwnProperty(property)) {
-        if (typeof parentObj[i] === 'object') {
-          childObj[i] = Array.isArray(parentObj[property]) ? [] : {};
-          childObj[i] = deepCopy(parentObj[property]);
-        }
-        else {
-          childObj[i] = parentObj[i];
+    this.deepCopy = function deepCopy(src) {
+      var child = {};
+      for (var i in src) {
+        if (src.hasOwnProperty(i)) {
+          if (typeof src[i] === 'object') {
+            child[i] = Array.isArray(src[i]) ? [] : {};
+            child[i] = deepCopy(src[i]);
+          } else {
+            child[i] = src[i];
+          }
         }
       }
-    }
-    return childObj;
+      return child;
+    };
   }
 })();
