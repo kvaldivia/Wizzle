@@ -16,3 +16,4 @@ screenshot*
 Gemfile.lock
 test_servers/
 .*.json
+.bundle
